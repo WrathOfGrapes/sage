@@ -130,7 +130,7 @@ def nextFrame(maze, paths):
         plot.axes(False)
         return (plot,newPaths)
     elif len(paths)>0:
-        plot = pathToPlot(maze,paths[0:1])
+        plot = pathToPlot(maze,filter(lambda x: x[-1]==(length-2,length-1),paths)[0:1])
         plot += drawMaze(maze)
         plot.axes(False)
         return (plot, [])
@@ -147,7 +147,7 @@ def allFrames(maze):
     return frames
 
 
-maze = generate_maze(30)
+maze = generate_maze(5)
 maze = addWalls(maze)
 #for i in maze:
 #    print i
@@ -158,4 +158,14 @@ maze = addWalls(maze)
 def mazeAnimation(maze):
     return animate(allFrames(maze))
 
-mazeAnimation(maze).show()
+#mazeAnimation(maze).show()
+
+@interact
+def mazeInteract(\
+                 N = slider(3,25,2, label = 'Labirint size'),\
+                 seed=input_box(label="Seed", type=int, default = 1),\
+                 FPS = slider(1,10,1,label = 'FPS')):
+    set_random_seed(seed)
+    maze = generate_maze(N)
+    maze = addWalls(maze)
+    mazeAnimation(maze).show(1.0/FPS)
